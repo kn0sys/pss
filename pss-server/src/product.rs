@@ -51,6 +51,7 @@ impl Product {
         }
     }
     pub fn product_from_nn(query: String, collection: String) -> Result<Product, ValentinusError> {
+        log::debug!("query: {} for collection {}", &query, &collection);
         let view = format!("view-{}", String::from(&collection));
         let ec = find(None, Some(String::from(&view)))?;
         let result = EmbeddingCollection::nearest_query(query, String::from(&view))?;

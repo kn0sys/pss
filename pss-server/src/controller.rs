@@ -6,6 +6,7 @@ use rocket::{
 };
 
 use pss_server::product;
+use pss_server::translate;
 use serde::{Deserialize, Serialize};
 use valentinus::embeddings::*;
 
@@ -53,8 +54,17 @@ pub async fn add_product(collection_name: &str, product: Json<product::Product>)
 /// Perform nearest neighbor query on a collection
 #[post("/nn", data = "<request>")]
 pub async fn nn_query(request: Json<QueryRequest>) -> Custom<Json<product::Product>> {
-    log::debug!("fetching product response for query {:?}", &request.query);
     let response = product::Product::product_from_nn(String::from(&request.query), String::from(&request.collection)).unwrap();
     Custom(Status::Ok, Json(response))
 }
 
+/// Translation API for LibreTranslate
+/// TODO: API Keys support
+#[post("/", data = "<request>")]
+pub async fn translate_query(request: Json<translate::TranslateRequest>) -> Custom<Json<translate::TranslateResponse>> {
+    let q = String::from(&request.q.clone());
+    let source = String::from(&request.source.clone());
+    let target = String::from(&request.target.clone());
+    let response = translate::query(q, source, target).await;
+    Custom(Status::Ok, Json( translate::TranslateResponse { translatedText: response }))
+}

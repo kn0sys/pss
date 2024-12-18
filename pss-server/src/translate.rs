@@ -1,22 +1,25 @@
+#![allow(non_snake_case)]
+
 use serde::{ Deserialize, Serialize };
 
-use pss_server::args;
+use crate::args;
+use clap::Parser;
 
 /// LibreTranslate request
 #[derive(Deserialize, Serialize, Debug)]
-struct TranslateRequest {
-    q: String,
-    source: String,
-    target: String,
+pub struct TranslateRequest {
+    pub q: String,
+    pub source: String,
+    pub target: String,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
-struct TranslateResponse {
-    translatedText: String
+pub struct TranslateResponse {
+    pub translatedText: String
 }
 
-async fn query(q: String, source: String, target: String) -> String {
-    log::info!("fetching translation response for query {:?}", text);
+pub async fn query(q: String, source: String, target: String) -> String {
+    log::info!("fetching translation response for query {:?}", &q);
     let client = reqwest::Client::new();
     let args = args::Args::parse();
     let req = TranslateRequest {
@@ -25,7 +28,7 @@ async fn query(q: String, source: String, target: String) -> String {
         target,
     };
     let res = client
-        .post(args.translate_host)
+        .post(args.libretranslate_host)
         .json(&req)
         .send()
         .await;
@@ -33,7 +36,7 @@ async fn query(q: String, source: String, target: String) -> String {
         Ok(r) => {
             let res = r.json::<TranslateResponse>().await;
             match res {
-                Ok(r) => r.response,
+                Ok(r) => r.translatedText,
                 Err(_) => Default::default(),
             }
         }
