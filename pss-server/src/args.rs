@@ -37,4 +37,13 @@ pub struct Args {
         default_value = "false"
     )]
     pub update_etl: bool,
+    /// Flag for local LibreTranslate server
+    /// TODO: add support for API keys
+    #[arg(
+        short,
+        long,
+        help = "Set the host for LibreTranslate locally. API Keys not yet supported",
+        default_value = "false",
+    )]
+    pub libretranslate_host: String,
 }
