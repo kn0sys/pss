@@ -12,6 +12,13 @@ import { Box, Container, CssBaseline } from "@mui/material";
 import Paper from '@mui/material/Paper';
 import AddProductComponent from './AddProductComponent';
 
+
+// combo box for collections list
+// combo box for language
+// card for query response
+// integrate nn query api
+// integrate translation api
+
 function App() {
   interface GptRequest {
     query: string;
@@ -40,10 +47,6 @@ function App() {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setQuery({ [prop]: event.target.value });
     };
-
-  const addProduct = async (ap: AddProductRequest) :Promise<void> => {
-
-  }
   
   const sendQuery = async (qr: GptRequest): Promise<void> => {
     setIsLoading(true);
@@ -99,6 +102,7 @@ function App() {
 	<AddProductComponent />
 	{" "}
 	<Button 
+	  className="pss-button"
           onClick={()=> {sendQuery(query)}}
           variant="contained"
           endIcon={<SendIcon />}>

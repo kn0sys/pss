@@ -21,4 +21,6 @@ curl -ivk POST http://localhost:3443/product/<COLLECTION_NAME> -d '{"description
 
 ### Nearest Neighbor Query
 ```bash
-curl -ivk POST
+curl -ivk POST http://localhost:3443/product/nn -d '{"collection": "pss-test", "query": "Show me something cool." }' -H 'Content-Type: application/json' 
+```
+
