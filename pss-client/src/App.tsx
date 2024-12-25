@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -10,20 +10,40 @@ import "./App.css";
 import logo from './assets/machine-learning-icon-vector.jpg';
 import { Box, Container, CssBaseline } from "@mui/material";
 import Paper from '@mui/material/Paper';
+import Divider from '@mui/material/Divider';
 import AddProductComponent from './AddProductComponent';
+import LanguageSelectionComponent from './LanguageSelectionComponent';
+import CollectionSelectionComponent from './CollectionSelectionComponent';
+import AppContext from './AppContext';
 
-
-// combo box for collections list
-// combo box for language
 // card for query response
 // integrate nn query api
 // integrate translation api
 
 function App() {
+
   interface GptRequest {
     query: string;
   }
   
+  interface QueryContext {
+    collection: string;
+    language: string;
+  }
+
+  /* global query context to set values from the combo boxes*/
+  const [queryContext, setQueryContext] = React.useState<QueryContext>({
+    collection: "pss_test",
+    language: "en", 
+  })
+  /* update the global query context for setting the collection and language*/
+  const configQueryContext = (qc: QueryContext) => {
+    setQueryContext(qc);
+  }
+  const queryContextContainer = {
+	  queryContext: queryContext,
+	  setQueryContext: setQueryContext,
+  }
   const [isLoading, setIsLoading] = React.useState(false);
   const [isShowingResponse, setIsShowingResponse] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
@@ -93,6 +113,15 @@ function App() {
             placeholder="What is water made of?"
           />
           </Box>
+	  <Divider />
+	  <AppContext.Provider value={queryContextContainer}>
+	  <Box sx={{ margin: "10px"}}>  
+	    <LanguageSelectionComponent />
+	  </ Box>
+	  <Box sx={{ margin: "10px"}}>
+	    <CollectionSelectionComponent />
+	  </ Box>
+	  </ AppContext.Provider>
           </CssBaseline>
         </Container>
       )}
