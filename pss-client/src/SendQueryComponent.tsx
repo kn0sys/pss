@@ -16,6 +16,11 @@ import AddProductComponent from './AddProductComponent';
 import AppContext from './AppContext';
 import AppQuery from './App';
 
+enum Language {
+  ENGLISH = 'en',
+  JAPANESE = 'ja',
+}
+
 interface Product {
   description: string;
   id: string;
@@ -47,8 +52,35 @@ export default function SendQuery(props) {
     setOpenSnackbar(false);
   };
 
+  const translateQuery = async (q: string): string => {
+    setNotification(`translating query from ${Language.JAPANESE}`);
+    setNLevel('info');
+    setOpenSnackbar(true);
+    let output = null;
+    let data = {
+      q,
+      source: Language.JAPANESE,
+      target: Language.ENGLISH,
+    };
+    output = await axios({
+        method: "post",
+        baseURL: `http://localhost:3443/translate`,
+	data,
+    }).catch((error) => {
+	setIsLoading(false);
+	setNotification(`failed to translate query due to: ${error.message}`);
+	setNLevel('error');
+	setOpenSnackbar(true);
+    });
+    return output.data.translatedText;
+  }
+  
   const sendQuery = async (aq: AppQuery) => {
     setIsLoading(true);
+    let query = aq.query;
+    if (ctx.queryContext.language == Language.JAPANESE) {
+      query = await translateQuery(aq.query);
+    }
     let data = {
 	collection: ctx.queryContext.collection,
 	query: aq.query,

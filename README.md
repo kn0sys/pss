@@ -9,13 +9,13 @@
 * Optional: Add addition languages as per https://forum.yunohost.org/t/libretranslate-how-to-add-additional-language-models/25879
 * Configure models for [Valentinus](https://github.com/kn0sys/valentinus)
 
-## PSS-Server
+## pss-server
 
 ```bash
 RUST_LOG=debug cargo run -- -h
 ```
 
-## PSS-client
+## pss-client
 
 ```bash
 npm i
