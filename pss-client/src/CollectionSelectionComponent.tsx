@@ -8,6 +8,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import axios from 'axios';
+import AppContext from './AppContext';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -15,7 +16,6 @@ const MenuProps = {
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
     },
   },
 };
@@ -37,8 +37,9 @@ export default function CollectionSelect() {
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [notification, setNotification] = React.useState('default message');
   const [nLevel, setNLevel] = React.useState('');
+  const ctx = React.useContext(AppContext);
 
-    const handleCloseSnackbar = (
+  const handleCloseSnackbar = (
     event?: React.SyntheticEvent | Event,
     reason?: SnackbarCloseReason,
   ) => {
@@ -56,6 +57,7 @@ export default function CollectionSelect() {
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
+    ctx.setQueryContext({collection: value, language: ctx.queryContext.language});
   };
 
   React.useEffect(() => {
@@ -85,16 +87,14 @@ export default function CollectionSelect() {
     }
   });
 
-
-
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 300 }}>
+      <FormControl sx={{ marginTop: "10px", width: 500 }}>
         <InputLabel id="collection-name-label">Collection</InputLabel>
         <Select
           labelId="collection-name-label"
           id="collection-name"
-          value={collectionName}
+	  value={collectionName}
           onChange={handleChange}
           input={<OutlinedInput label="Collection" />}
           MenuProps={MenuProps}
