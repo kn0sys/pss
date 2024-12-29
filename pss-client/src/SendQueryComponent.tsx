@@ -83,7 +83,7 @@ export default function SendQuery(props) {
     }
     let data = {
 	collection: ctx.queryContext.collection,
-	query: aq.query,
+	query,
     }
     let output = null;
     output = await axios({
